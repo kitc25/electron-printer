@@ -4,5 +4,7 @@
 
 
 MY_NODE_MODULE_CALLBACK(SayMyName);
+MY_NODE_MODULE_CALLBACK(getPrinters);
+
 
 #endif
