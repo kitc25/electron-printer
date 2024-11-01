@@ -1,0 +1,18 @@
+{
+  "main": "lib/binding.js",
+  "private": true,
+  "dependencies": {
+    "node-addon-api": "^8.1.0"
+  },
+  "scripts": {
+    "install": "prebuild-install || node-gyp rebuild",
+    "rebuild": "node-gyp rebuild",
+    "test": "node --napi-modules ./test/test_binding.js"
+  },
+  "gypfile": true,
+  "name": "electron_printer",
+  "version": "1.0.0",
+  "description": "Node printer enabled supported Node API (N-API)",
+  "author": "Sudheer gupta",
+  "license": "ISC"
+}
