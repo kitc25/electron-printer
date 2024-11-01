@@ -5,7 +5,7 @@ using namespace Napi;
 Napi::String SayMyName(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
 
-  return Napi::String::New(env, "Rakesh gupta");
+  return Napi::String::New(env, "Electron printer");
 }
 
 Napi::Object Init(Napi::Env env, Napi::Object exports) {

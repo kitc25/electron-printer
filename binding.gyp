@@ -17,7 +17,11 @@
     },
     {
       'target_name': '<(module_name)',
-      'sources': [ 'src/hello_world.cc' ],
+      'sources': [
+        # is like "ls -1 src/*.cc", but gyp does not support direct patterns on
+        # sources
+        '<!@(["python", "tools/getSourceFiles.py", "src", "cc"])'
+      ],
       'include_dirs': ["<!@(node -p \"require('node-addon-api').include\")"],
       'dependencies': ["<!(node -p \"require('node-addon-api').gyp\")"],
       'cflags!': [ '-fno-exceptions' ],
