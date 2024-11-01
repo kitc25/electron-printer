@@ -1,15 +1,15 @@
-#include <napi.h>
+#include "node_printer.hpp"
 
 using namespace Napi;
 
-String SayMyName(const CallbackInfo& info) {
-  Env env = info.Env();
-
+MY_NODE_MODULE_CALLBACK(SayMyName) 
+{
+  Env env = iArgs.Env();
   return String::New(env, "Electron printer");
 }
 
 Object Init(Env env, Object exports) {
-  exports.Set(String::New(env, "SayMyName"), Function::New(env, SayMyName));
+  MY_MODULE_SET_METHOD(exports, "SayMyName", SayMyName);
   return exports;
 }
 
