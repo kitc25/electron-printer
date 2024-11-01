@@ -1,8 +1,8 @@
 #include "node_printer.hpp"
 
-using namespace Napi;
 
-Object Init(Env env, Object exports) {
+
+Napi::Object Init(Napi::Env env, Napi::Object exports) {
   MY_MODULE_SET_METHOD(exports, "SayMyName", SayMyName);
   MY_MODULE_SET_METHOD(exports,"getPrinters", getPrinters);
   return exports;
