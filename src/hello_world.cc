@@ -2,14 +2,14 @@
 
 using namespace Napi;
 
-Napi::String SayMyName(const Napi::CallbackInfo& info) {
-  Napi::Env env = info.Env();
+String SayMyName(const CallbackInfo& info) {
+  Env env = info.Env();
 
-  return Napi::String::New(env, "Electron printer");
+  return String::New(env, "Electron printer");
 }
 
-Napi::Object Init(Napi::Env env, Napi::Object exports) {
-  exports.Set(Napi::String::New(env, "SayMyName"), Napi::Function::New(env, SayMyName));
+Object Init(Env env, Object exports) {
+  exports.Set(String::New(env, "SayMyName"), Function::New(env, SayMyName));
   return exports;
 }
 
