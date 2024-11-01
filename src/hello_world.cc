@@ -4,6 +4,7 @@ using namespace Napi;
 
 MY_NODE_MODULE_CALLBACK(SayMyName) 
 {
-  Env env = iArgs.Env();
-  return String::New(env, "Electron printer");
+  MY_NODE_MODULE_HANDLESCOPE
+
+  MY_NODE_MODULE_RETURN_VALUE(String::New(MY_NODE_MODULE_ENV, "Electron printer"));
 }
