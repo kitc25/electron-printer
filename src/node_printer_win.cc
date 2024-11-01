@@ -20,6 +20,42 @@ void ConsolePrint(const std::string& message) {
     fflush(stdout); // Ensure the output is flushed immediately
 }
 
+namespace{
+    typedef std::map<std::string, DWORD> StatusMapType;
+
+    /** Memory value class management to avoid memory leak
+    */
+    template<typename Type>
+    class MemValue: public MemValueBase<Type> {
+    public:
+        /** Constructor of allocating iSizeKbytes bytes memory;
+        * @param iSizeKbytes size in bytes of required allocating memory
+        */
+        MemValue(const DWORD iSizeKbytes) {
+            _value = (Type*)malloc(iSizeKbytes);
+        }
+		
+        ~MemValue () {
+            free();
+        }
+
+        Type* get() {
+        return _value;
+        }
+    protected:
+        virtual void free() {
+            if(_value != NULL)
+            {
+                ::free(_value);
+                _value = NULL;
+            }
+        }
+
+    private:
+    Type* _value; // Declaration of the member variable
+    };
+}
+
 MY_NODE_MODULE_CALLBACK(getPrinters) 
 {
   MY_NODE_MODULE_HANDLESCOPE
