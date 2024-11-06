@@ -411,6 +411,10 @@ MY_NODE_MODULE_CALLBACK(getPrinters)
         RETURN_EXCEPTION_STR(MY_NODE_MODULE_ENV, "Error retrieving printer size.");
     }
 
+    // Check if we got a valid size
+    if (printers_size_bytes == 0) {
+        RETURN_EXCEPTION_STR(info.Env(), "No printers found or invalid size returned.");
+    }
   //MY_NODE_MODULE_RETURN_VALUE(Napi::String::New(MY_NODE_MODULE_ENV, "native getPrinters Invoked"));
 }
 
