@@ -399,7 +399,7 @@ namespace{
 
 MY_NODE_MODULE_CALLBACK(getPrinters) 
 {
-    MY_NODE_MODULE_HANDLESCOPE
+    MY_NODE_MODULE_HANDLESCOPE;
     DWORD printers_size = 0;
     DWORD printers_size_bytes = 0, dummyBytes = 0;
     DWORD Level = 2;
@@ -421,6 +421,15 @@ MY_NODE_MODULE_CALLBACK(getPrinters)
     if (!printers.get()) // Make sure to check the pointer
     {
         RETURN_EXCEPTION_STR(MY_NODE_MODULE_ENV, "Error allocating memory for printers");
+    }
+    
+    // Second call to retrieve printer information
+    bError = EnumPrintersW(flags, NULL, Level, (LPBYTE)(printers.get()), printers_size_bytes, &dummyBytes, &printers_size);
+    if (!bError)
+    {
+        std::string error_str("Error on EnumPrinters");
+        error_str += getLastErrorCodeAndMessage();
+        RETURN_EXCEPTION_STR(MY_NODE_MODULE_ENV, error_str.c_str());
     }
   //MY_NODE_MODULE_RETURN_VALUE(Napi::String::New(MY_NODE_MODULE_ENV, "native getPrinters Invoked"));
 }
