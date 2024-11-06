@@ -406,7 +406,10 @@ MY_NODE_MODULE_CALLBACK(getPrinters)
     DWORD flags = PRINTER_ENUM_LOCAL | PRINTER_ENUM_CONNECTIONS;
     // First try to retrieve the number of printers
     BOOL bError = EnumPrintersW(flags, NULL, Level, NULL, 0, &printers_size_bytes, &printers_size);
-    
+    // Check for errors in the first call
+    if (!bError && GetLastError() != ERROR_INSUFFICIENT_BUFFER) {
+        RETURN_EXCEPTION_STR(MY_NODE_MODULE_ENV, "Error retrieving printer size.");
+    }
 
   //MY_NODE_MODULE_RETURN_VALUE(Napi::String::New(MY_NODE_MODULE_ENV, "native getPrinters Invoked"));
 }
