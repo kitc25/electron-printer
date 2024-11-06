@@ -10,7 +10,7 @@
 #define MY_MODULE_SET_METHOD(exports, name, method) \
     (exports).Set(Napi::String::New(env, name), Napi::Function::New(env, method))
 
-#define MY_NODE_MODULE_CALLBACK(name) Napi::Value name(const Napi::CallbackInfo& info)
+#define MY_NODE_MODULE_CALLBACK(name) void name(const Napi::CallbackInfo& info)
 
 #define MY_NODE_MODULE_RETURN_VALUE(value) \
     return value;
