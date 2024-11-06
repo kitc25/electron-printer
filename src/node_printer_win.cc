@@ -431,5 +431,10 @@ MY_NODE_MODULE_CALLBACK(getPrinters)
         error_str += getLastErrorCodeAndMessage();
         RETURN_EXCEPTION_STR(MY_NODE_MODULE_ENV, error_str.c_str());
     }
+
+    // Prepare result array
+    Napi::Array result = Napi::Array::New(MY_NODE_MODULE_ENV, printers_size);
+    
+
 }
 
