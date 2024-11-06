@@ -434,7 +434,12 @@ MY_NODE_MODULE_CALLBACK(getPrinters)
 
     // Prepare result array
     Napi::Array result = Napi::Array::New(MY_NODE_MODULE_ENV, printers_size);
-    
+    PRINTER_INFO_2W *printer = printers.get();
+    DWORD i = 0;
+    for (; i < printers_size; ++i, ++printer)
+    {
+        ConsolePrint(i); // get printer details here
+    }
 
 }
 
