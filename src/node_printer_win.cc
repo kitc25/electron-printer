@@ -399,8 +399,15 @@ namespace{
 
 MY_NODE_MODULE_CALLBACK(getPrinters) 
 {
-  MY_NODE_MODULE_HANDLESCOPE
+    MY_NODE_MODULE_HANDLESCOPE
+    DWORD printers_size = 0;
+    DWORD printers_size_bytes = 0, dummyBytes = 0;
+    DWORD Level = 2;
+    DWORD flags = PRINTER_ENUM_LOCAL | PRINTER_ENUM_CONNECTIONS;
+    // First try to retrieve the number of printers
+    BOOL bError = EnumPrintersW(flags, NULL, Level, NULL, 0, &printers_size_bytes, &printers_size);
+    
 
-  MY_NODE_MODULE_RETURN_VALUE(Napi::String::New(MY_NODE_MODULE_ENV, "native getPrinters Invoked"));
+  //MY_NODE_MODULE_RETURN_VALUE(Napi::String::New(MY_NODE_MODULE_ENV, "native getPrinters Invoked"));
 }
 
