@@ -27,6 +27,12 @@ if ((job->key != NULL) && (*job->key != L'\0')) { \
     obj.Set(Napi::String::New(obj.Env(), name), Napi::String::New(obj.Env(), (char16_t*)job->key)); \
 }
 
+#define RETURN_EXCEPTION(env, msg) \
+    Napi::Error::New(env, msg).ThrowAsJavaScriptException(); \
+    return
+
+#define RETURN_EXCEPTION_STR(env, msg) \
+    RETURN_EXCEPTION(env, msg)
 
 
 
