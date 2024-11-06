@@ -15,7 +15,20 @@
 #define MY_NODE_MODULE_RETURN_VALUE(value) \
     return value;
 
-#define NAPI_VALUE_NEW_DEFAULT(type, ...) Napi::type::New(MY_NODE_MODULE_ENV, __VA_ARGS__)
+#define NAPI_STRING_NEW_UTF8(env, value) Napi::String::New(env, value)
+
+#define ADD_NAPI_NUMBER_PROPERTY(obj, name, value) \
+    obj.Set(Napi::String::New(obj.Env(), name), Napi::Number::New(obj.Env(), value))
+
+#define NAPI_STRING_NEW_2BYTES(env, value) Napi::String::New(env, (char16_t*)value)
+
+#define ADD_NAPI_STRING_PROPERTY(obj, name, key) \
+if ((job->key != NULL) && (*job->key != L'\0')) { \
+    obj.Set(Napi::String::New(obj.Env(), name), Napi::String::New(obj.Env(), (char16_t*)job->key)); \
+}
+
+
+
 
 
 #endif
