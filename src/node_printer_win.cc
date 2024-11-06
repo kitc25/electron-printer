@@ -410,10 +410,17 @@ MY_NODE_MODULE_CALLBACK(getPrinters)
     if (!bError && GetLastError() != ERROR_INSUFFICIENT_BUFFER) {
         RETURN_EXCEPTION_STR(MY_NODE_MODULE_ENV, "Error retrieving printer size.");
     }
-
+    
     // Check if we got a valid size
     if (printers_size_bytes == 0) {
         RETURN_EXCEPTION_STR(info.Env(), "No printers found or invalid size returned.");
+    }
+
+    // Allocate the required memory
+    MemValue<PRINTER_INFO_2W> printers(printers_size_bytes);
+    if (!printers.get()) // Make sure to check the pointer
+    {
+        RETURN_EXCEPTION_STR(MY_NODE_MODULE_ENV, "Error allocating memory for printers");
     }
   //MY_NODE_MODULE_RETURN_VALUE(Napi::String::New(MY_NODE_MODULE_ENV, "native getPrinters Invoked"));
 }
