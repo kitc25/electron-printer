@@ -3,6 +3,6 @@
 MY_NODE_MODULE_CALLBACK(SayMyName) 
 {
   MY_NODE_MODULE_HANDLESCOPE
-
-  //MY_NODE_MODULE_RETURN_VALUE(Napi::String::New(MY_NODE_MODULE_ENV, "Electron printer test"));
+   Napi::String result = Napi::String::New(info.Env(), "Hello, From C++ !");
+  MY_NODE_MODULE_RETURN_VALUE(result);
 }

@@ -438,8 +438,15 @@ MY_NODE_MODULE_CALLBACK(getPrinters)
     DWORD i = 0;
     for (; i < printers_size; ++i, ++printer)
     {
-        ConsolePrint(i); // get printer details here
+        Napi::Object a_printer = Napi::Object::New(MY_NODE_MODULE_ENV);
+        PrinterHandle printerHandle((LPWSTR)(printer->pPrinterName));
+        std::string error_str = parsePrinterInfo(printer, a_printer, printerHandle);
+        if (!error_str.empty())
+        {
+            RETURN_EXCEPTION_STR(MY_NODE_MODULE_ENV, error_str.c_str());
+        }
+        result.Set(i, a_printer);
     }
-
+    MY_NODE_MODULE_RETURN_VALUE(result);
 }
 
