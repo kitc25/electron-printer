@@ -431,6 +431,5 @@ MY_NODE_MODULE_CALLBACK(getPrinters)
         error_str += getLastErrorCodeAndMessage();
         RETURN_EXCEPTION_STR(MY_NODE_MODULE_ENV, error_str.c_str());
     }
-  //MY_NODE_MODULE_RETURN_VALUE(Napi::String::New(MY_NODE_MODULE_ENV, "native getPrinters Invoked"));
 }
 
