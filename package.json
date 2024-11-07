@@ -1,9 +1,9 @@
 {
-  "name": "@susheer/electron-printer",
+  "name": "@thesusheer/electron-printer",
   "description": "Node API (N-API) supported electron.s || node.js printer bindings",
   "homepage": "https://github.com/Susheer/electron-printer",
   "version": "2.0.0",
-  "main": "lib/binding.js",
+  "main": "./lib/binding.js",
   "types": "types/index.d.ts",
   "dependencies": {
     "node-addon-api": "^8.1.0"
