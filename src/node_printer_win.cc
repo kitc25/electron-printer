@@ -449,4 +449,9 @@ MY_NODE_MODULE_CALLBACK(getPrinters)
     }
     MY_NODE_MODULE_RETURN_VALUE(result);
 }
-
+MY_NODE_MODULE_CALLBACK(getDefaultPrinterName) 
+{
+    MY_NODE_MODULE_HANDLESCOPE;
+    // @todo - WIP
+    MY_NODE_MODULE_RETURN_VALUE(Napi::String::New(env, "Default printer name"));
+}

@@ -5,6 +5,8 @@
 
 MY_NODE_MODULE_CALLBACK(SayMyName);
 MY_NODE_MODULE_CALLBACK(getPrinters);
+MY_NODE_MODULE_CALLBACK(getDefaultPrinterName);
+
 
 /**
  * @brief A base class template for managing a pointer to a value of type Type.
