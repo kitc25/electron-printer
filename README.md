@@ -1,6 +1,6 @@
-# electron_printer
+# @susheer/electron-printer
 
-`electron_printer` is a Node.js and Electron.js addon for printing barcodes on barcode printers. This project leverages Node-API (N-API) to ensure compatibility and stability across different Node.js versions and environments. Currently, it supports Windows only.
+`@susheer/electron-printer` is a Node.js and Electron.js addon for printing barcodes on barcode printers. This project leverages Node-API (N-API) to ensure compatibility and stability across different Node.js versions and environments. Currently, it supports Windows only.
 
 ## Features
 
@@ -11,22 +11,22 @@
 
 ## Installation
 
-To install `electron_printer`, use npm:
+To install `@susheer/electron-printer`, use npm:
 
 ```bash
-npm install electron_printer
+npm install @susheer/electron-printer
 ```
 
 ## Usage
 
-Here's a basic example of how to use `electron_printer` in a Node.js or Electron.js application:
+Here's a basic example of how to use `@susheer/electron-printer` in a Node.js or Electron.js application:
 
 ```javascript
-const electron_printer = require('electron_printer');
+const printer = require('@susheer/electron-printer');
 
 // Example function to print a barcode
 function printBarcode(data) {
-    electron_printer.print(data, (err) => {
+    printer.print(data, (err) => {
         if (err) {
             console.error('Error printing barcode:', err);
         } else {
@@ -64,12 +64,12 @@ Prints a barcode with the specified data.
 
 ## Building from Source
 
-To build `electron_printer` from source, you need to have Node.js and npm installed. Then, follow these steps:
+To build `@susheer/electron-printer` from source, you need to have Node.js and npm installed. Then, follow these steps:
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/yourusername/electron_printer.git
-    cd electron_printer
+    git clone https://github.com/Susheer/electron-printer.git
+    cd @susheer/electron-printer
     ```
 
 2. Install dependencies:
