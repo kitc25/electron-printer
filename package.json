@@ -1,6 +1,10 @@
 {
+  "name": "@susheer/electron-printer",
+  "description": "Node API (N-API) supported electron.s || node.js printer bindings",
+  "homepage": "https://github.com/Susheer/electron-printer",
+  "version": "2.0.0",
   "main": "lib/binding.js",
-  "private": true,
+  "types": "types/index.d.ts",
   "dependencies": {
     "node-addon-api": "^8.1.0"
   },
@@ -11,9 +15,29 @@
     "test": "node --test test/"
   },
   "gypfile": true,
-  "name": "electron_printer",
-  "version": "1.0.0",
-  "description": "Node printer enabled supported Node API (N-API)",
-  "author": "Sudheer gupta",
-  "license": "ISC"
+  "author": {
+    "name": "Ion Lupascu",
+    "url": "http://program-support.co.uk/",
+    "email": "ionlupascu@gmail.com"
+  },
+  "contributors": [
+    "Sudheer Gupta <sudheergupta0508@gmail.com>",
+    "Thiago Lugli <thiagoelg@gmail.com>",
+    "Eko Eryanto <ekoeryanto@gmail.com>"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Susheer/electron-printer.git"
+  },
+  "binary": {
+    "module_name": "electron_printer",
+    "module_path": "./lib/",
+    "host": "https://github.com/Susheer/node-printer/releases/download/",
+    "remote_path": "v{version}"
+  },
+  "licenses": [
+    {
+      "type": "BSD"
+    }
+  ]
 }
