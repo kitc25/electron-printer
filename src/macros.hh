@@ -39,6 +39,15 @@ if ((job->key != NULL) && (*job->key != L'\0')) { \
         RETURN_EXCEPTION_STR(env, "Expected " #n " arguments");                       \
     }
 
+#define ARG_CHECK_STRING(env, args, i)                                                   \
+    if ((args).Length() <= (i) || !(args)[(i)].IsString()) {                                                 \
+        RETURN_EXCEPTION_STR(env, "Argument " #i " must be a string");                       \
+    }
+
+#define REQUIRE_ARGUMENT_STRINGW(env, args, i, var)                                      \
+    ARG_CHECK_STRING(env, args, i);                                                      \
+    std::wstring var = (args)[(i)].As<Napi::String>().Utf16Value();
+
 
 #endif
 

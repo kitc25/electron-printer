@@ -20,6 +20,11 @@ void ConsolePrint(const std::string& message) {
     fflush(stdout); // Ensure the output is flushed immediately
 }
 
+// Function to convert std::u16string to std::wstring
+std::wstring u16stringToWString(const std::u16string& u16str) {
+    return std::wstring(u16str.begin(), u16str.end());
+}
+
 namespace{
     typedef std::map<std::string, DWORD> StatusMapType;
 
@@ -70,9 +75,9 @@ namespace{
         }
         operator HANDLE() {return _printer;}
         operator bool() { return (!!_ok);}
-        HANDLE & operator *() { return _printer;}
-        HANDLE * operator ->() { return &_printer;}
-        const HANDLE & operator ->() const { return _printer;}
+        HANDLE& operator *() { return _printer;}
+        HANDLE* operator ->() { return &_printer;}
+        const HANDLE& operator ->() const { return _printer;}
         HANDLE _printer;
         BOOL _ok;
     };
@@ -478,12 +483,19 @@ MY_NODE_MODULE_CALLBACK(printDirect)
     {
         RETURN_EXCEPTION_STR(MY_NODE_MODULE_ENV, "Argument 0 missing");
     }
-    
+
     std::string data;
     if (!getStringOrBufferFromNapiValue(info[0], data)) {
         Napi::TypeError::New(env, "Argument 0 must be a string or Buffer").ThrowAsJavaScriptException();
         return env.Null();
     }
+       std::u16string u16Str = info[1].As<Napi::String>().Utf16Value();
+       std::wstring printername = u16stringToWString(u16Str);
+       // Convert std::wstring to LPWSTR (mutable wide string pointer)
+    std::vector<wchar_t> printernameMutable(printername.begin(), printername.end());
+    printernameMutable.push_back(L'\0'); // Ensure null-termination
+
+        PrinterHandle printerHandle(printernameMutable.data());
 
     MY_NODE_MODULE_RETURN_VALUE(NAPI_STRING_NEW_2BYTES(MY_NODE_MODULE_ENV, "yet to be done"));
 }
