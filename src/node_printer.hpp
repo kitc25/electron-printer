@@ -6,6 +6,7 @@
 MY_NODE_MODULE_CALLBACK(SayMyName);
 MY_NODE_MODULE_CALLBACK(getPrinters);
 MY_NODE_MODULE_CALLBACK(getDefaultPrinterName);
+MY_NODE_MODULE_CALLBACK(printDirect);
 
 
 /**
