@@ -11,3 +11,18 @@ Napi::Object Init(Napi::Env env, Napi::Object exports) {
 }
 
 NODE_API_MODULE(addon, Init)
+
+// Helpers
+
+bool getStringOrBufferFromNapiValue(const Napi::Value& value, std::string& oData) {
+    if (value.IsString()) {
+        oData = value.As<Napi::String>().Utf8Value();
+        return true;
+    }
+    if (value.IsBuffer()) {
+        Napi::Buffer<char> buffer = value.As<Napi::Buffer<char>>();
+        oData.assign(buffer.Data(), buffer.Length());
+        return true;
+    }
+    return false;
+}

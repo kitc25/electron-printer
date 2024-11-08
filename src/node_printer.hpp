@@ -60,4 +60,14 @@ protected:
     virtual void free() {};
 };
 
+/**
+ * Try to extract a string or buffer from a N-API value.
+ * @param value - source N-API value
+ * @param oData - destination data
+ * @return TRUE if value is a string or buffer, FALSE otherwise
+ */
+
+bool getStringOrBufferFromNapiValue(const Napi::Value& value, std::string& oData);
+
+
 #endif
