@@ -34,7 +34,10 @@ if ((job->key != NULL) && (*job->key != L'\0')) { \
 #define RETURN_EXCEPTION_STR(env, msg) \
     RETURN_EXCEPTION(env, msg)
 
-
+#define REQUIRE_ARGUMENTS(env, args, n)                                                   \
+    if (args.Length() < (n)) {                                                 \
+        RETURN_EXCEPTION_STR(env, "Expected " #n " arguments");                       \
+    }
 
 
 #endif
