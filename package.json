@@ -32,12 +32,20 @@
   "binary": {
     "module_name": "electron_printer",
     "module_path": "./lib/",
-    "host": "https://github.com/Susheer/node-printer/releases/download/",
+    "host": "https://github.com/Susheer/electron-printer/releases/download/",
     "remote_path": "v{version}"
   },
   "licenses": [
     {
       "type": "BSD"
     }
-  ]
+  ],
+  "devDependencies": {
+    "grunt": "^1.6.1",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-jshint": "^3.2.0",
+    "grunt-node-gyp": "^5.0.0",
+    "grunt-shell": "^4.0.0",
+    "node-pre-gyp": "^0.17.0"
+  }
 }
