@@ -456,7 +456,7 @@ MY_NODE_MODULE_CALLBACK(getDefaultPrinterName)
     DWORD cSize = 0;
     GetDefaultPrinterW(NULL, &cSize);
 
-    if(cSize != 0) {
+    if(cSize == 0) {
         MY_NODE_MODULE_RETURN_VALUE(NAPI_STRING_NEW_UTF8(MY_NODE_MODULE_ENV, ""));
     }
 
