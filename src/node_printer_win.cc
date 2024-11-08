@@ -471,8 +471,19 @@ MY_NODE_MODULE_CALLBACK(getDefaultPrinterName)
 
 MY_NODE_MODULE_CALLBACK(printDirect)
 {
- MY_NODE_MODULE_HANDLESCOPE;
- REQUIRE_ARGUMENTS(MY_NODE_MODULE_ENV, info, 5);
- 
- MY_NODE_MODULE_RETURN_VALUE(NAPI_STRING_NEW_2BYTES(MY_NODE_MODULE_ENV, "yet to be done"));
+    MY_NODE_MODULE_HANDLESCOPE;
+    REQUIRE_ARGUMENTS(MY_NODE_MODULE_ENV, info, 5);
+    // can be string or buffer
+    if (info.Length() <= 0)
+    {
+        RETURN_EXCEPTION_STR(MY_NODE_MODULE_ENV, "Argument 0 missing");
+    }
+    
+    std::string data;
+    if (!getStringOrBufferFromNapiValue(info[0], data)) {
+        Napi::TypeError::New(env, "Argument 0 must be a string or Buffer").ThrowAsJavaScriptException();
+        return env.Null();
+    }
+
+    MY_NODE_MODULE_RETURN_VALUE(NAPI_STRING_NEW_2BYTES(MY_NODE_MODULE_ENV, "yet to be done"));
 }
