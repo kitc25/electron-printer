@@ -449,9 +449,22 @@ MY_NODE_MODULE_CALLBACK(getPrinters)
     }
     MY_NODE_MODULE_RETURN_VALUE(result);
 }
+
 MY_NODE_MODULE_CALLBACK(getDefaultPrinterName) 
 {
     MY_NODE_MODULE_HANDLESCOPE;
-    // @todo - WIP
-    MY_NODE_MODULE_RETURN_VALUE(Napi::String::New(env, "Default printer name"));
+    DWORD cSize = 0;
+    GetDefaultPrinterW(NULL, &cSize);
+
+    if(cSize != 0) {
+        MY_NODE_MODULE_RETURN_VALUE(NAPI_STRING_NEW_UTF8(MY_NODE_MODULE_ENV, ""));
+    }
+
+    MemValue<uint16_t> bPrinterName(cSize*sizeof(uint16_t));
+    BOOL res = GetDefaultPrinterW((LPWSTR)(bPrinterName.get()), &cSize);
+
+    if(!res) {
+        MY_NODE_MODULE_RETURN_VALUE(NAPI_STRING_NEW_UTF8(MY_NODE_MODULE_ENV, ""));
+    }
+    MY_NODE_MODULE_RETURN_VALUE(NAPI_STRING_NEW_2BYTES(MY_NODE_MODULE_ENV, bPrinterName.get()));
 }

@@ -14,5 +14,5 @@ test('Ensure getDefaultPrinterName function exists', (t) => {
 
 test('Ensure getDefaultPrinterName returns a string', (t) => {
   const result = addon.getDefaultPrinterName();
-  assert.strictEqual(result, 'Default printer name', 'getDefaultPrinterName should return a string "Default printer name"');
+  assert.strictEqual(typeof result, "string", 'getDefaultPrinterName should return a string');
 });
