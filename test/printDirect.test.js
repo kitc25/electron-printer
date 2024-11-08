@@ -2,9 +2,10 @@ const assert = require('assert/strict');
 const { test, beforeEach } = require('node:test');
 
 let addon;
-
+let template;
 beforeEach(() => {
   addon = require('../lib');
+  template = "N\nS4\nD15\nq400\nR\nB20,10,0,1,2,30,173,B,\"barcode\"\nP0\n";
 });
 
 test('Ensure printDirect function exists', (t) => {
@@ -19,5 +20,15 @@ test('Ensure printDirect throws error when no arguments are passed', (t) => {
 });
 
 test('Ensure printDirect works properly', (t) => {
-  addon.printDirect(1,2,3,4,5);
+ let barcode_text = "123";
+ let printer_name = addon.getDefaultPrinterName();
+  addon.printDirect({
+		data:template.replace(/barcode/, barcode_text)
+		, printer:printer_name
+		, type: "RAW"
+		, success:function(){
+			console.log("printed: "+barcode_text);
+		}
+		, error:function(err){console.log(err);}
+	});
 });
