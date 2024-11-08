@@ -1,4 +1,31 @@
-const addon = require('./electron_printer.node');
+const path = require('path');
+const os = require('os');
+let addon = {}, binary_path;
+switch (os.platform()) {
+    case 'win32':
+        if (os.arch() === 'ia32') {
+            binary_path = path.join(__dirname, 'lib', 'electron_printer_win32_ia32.node');
+        } else if (os.arch() === 'x64') {
+            binary_path = path.join(__dirname, 'lib', 'electron_printer_win32_x64.node');
+        }
+        addon = require(binary_path);
+        break;
+    case 'darwin':
+        binary_path = path.join(__dirname, 'lib', 'electron_printer.node'); 
+        addon = require(binary_path);
+        break;
+    case 'linux':
+        if (os.arch() === 'ia32') {
+            addon = path.join(__dirname, 'lib', 'electron_printer.node');
+        } else if (os.arch() === 'x64') {
+            addon = path.join(__dirname, 'lib', 'electron_printer.node');
+        }
+        break;
+    default:
+        binary_path = path.join(__dirname, 'lib', 'electron_printer.node'); 
+        addon = require(binary_path);
+}
+
 module.exports.sayMyName = addon.SayMyName
 module.exports.getPrinters = addon.getPrinters
 module.exports.printDirect = printDirect
