@@ -14,7 +14,7 @@
     "electron-rebuild": "node-gyp rebuild --target_platform=win32 --target_arch=x64  --runtime=electron --target=32.2.0 --dist-url=https://electronjs.org/headers",
     "test": "node --test test/"
   },
-  "gypfile": true,
+  "gypfile": false,
   "author": {
     "name": "Ion Lupascu",
     "url": "http://program-support.co.uk/",

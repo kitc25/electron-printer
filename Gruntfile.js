@@ -2,16 +2,19 @@ module.exports = function(grunt) {
     grunt.initConfig({
         shell: {
             'node-pre-gyp-ia32': {
-                command: 'node-pre-gyp rebuild --target_arch=ia32'
+                command: 'node-pre-gyp configure build package --target_arch=ia32'
             },
             'node-pre-gyp-x64': {
-                command: 'node-pre-gyp rebuild --target_arch=x64'
+                command: 'node-pre-gyp configure build package --target_arch=x64'
             },
             'node-gyp-ia32': {
                 command: 'node-gyp rebuild --arch=ia32'
             },
             'node-gyp-x64': {
                 command: 'node-gyp rebuild --arch=x64'
+            },
+            'upload-binaries': {
+                command: 'node-pre-gyp-github publish'
             }
         },
         copy: {
@@ -64,5 +67,14 @@ module.exports = function(grunt) {
     grunt.registerTask('build-pre', [
         'build-pre-ia32',
         'build-pre-x64'
+    ]);
+
+    grunt.registerTask('upload', [
+        'shell:upload-binaries'
+    ]);
+
+    grunt.registerTask('release', [
+        'build-pre',
+        'upload'
     ]);
 };
