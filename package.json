@@ -3,7 +3,7 @@
   "description": "Node API (N-API) supported electron.s || node.js printer bindings",
   "homepage": "https://github.com/Susheer/electron-printer",
   "version": "2.0.1",
-  "main": "./lib/binding.js",
+  "main": "./lib/index.js",
   "types": "types/index.d.ts",
   "dependencies": {
     "node-addon-api": "^8.1.0"
@@ -11,6 +11,7 @@
   "scripts": {
     "install": "prebuild-install || node-gyp rebuild",
     "rebuild": "node-gyp rebuild",
+    "prepublishOnly": "grunt release",
     "electron-rebuild": "node-gyp rebuild --target_platform=win32 --target_arch=x64  --runtime=electron --target=32.2.0 --dist-url=https://electronjs.org/headers",
     "test": "node --test test/"
   },
@@ -27,13 +28,16 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/Susheer/electron-printer.git"
+    "url": "https://github.com/Susheer/electron-printer.git"
   },
   "binary": {
     "module_name": "electron_printer",
     "module_path": "./lib/",
     "host": "https://github.com/Susheer/electron-printer/releases/download/",
     "remote_path": "v{version}"
+  },
+   "node-pre-gyp-github": {
+    "target_commitish": "napi-compatibility"
   },
   "licenses": [
     {
@@ -46,6 +50,7 @@
     "grunt-contrib-jshint": "^3.2.0",
     "grunt-node-gyp": "^5.0.0",
     "grunt-shell": "^4.0.0",
-    "node-pre-gyp": "^0.17.0"
+    "node-pre-gyp": "^0.17.0",
+    "node-pre-gyp-github": "^1.4.5"
   }
 }
