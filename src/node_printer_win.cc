@@ -477,25 +477,91 @@ MY_NODE_MODULE_CALLBACK(getDefaultPrinterName)
 MY_NODE_MODULE_CALLBACK(printDirect)
 {
     MY_NODE_MODULE_HANDLESCOPE;
-    REQUIRE_ARGUMENTS(MY_NODE_MODULE_ENV, info, 5);
-    // can be string or buffer
-    if (info.Length() <= 0)
-    {
-        RETURN_EXCEPTION_STR(MY_NODE_MODULE_ENV, "Argument 0 missing");
+       // Ensure the correct number of arguments
+    if (info.Length() < 5) {
+        Napi::TypeError::New(env, "Expected 5 arguments").ThrowAsJavaScriptException();
+        return env.Null();
     }
 
+    // Check and extract the first argument (string or buffer)
     std::string data;
     if (!getStringOrBufferFromNapiValue(info[0], data)) {
         Napi::TypeError::New(env, "Argument 0 must be a string or Buffer").ThrowAsJavaScriptException();
         return env.Null();
     }
-       std::u16string u16Str = info[1].As<Napi::String>().Utf16Value();
-       std::wstring printername = u16stringToWString(u16Str);
-       // Convert std::wstring to LPWSTR (mutable wide string pointer)
+
+    // Check and extract the second argument (string)
+    if (!info[1].IsString()) {
+        Napi::TypeError::New(env, "Argument 1 must be a string").ThrowAsJavaScriptException();
+        return env.Null();
+    }
+    std::u16string u16PrinterName = info[1].As<Napi::String>().Utf16Value();
+    std::wstring printername = u16stringToWString(u16PrinterName);
+
+    // Check and extract the third argument (string)
+    if (!info[2].IsString()) {
+        Napi::TypeError::New(env, "Argument 2 must be a string").ThrowAsJavaScriptException();
+        return env.Null();
+    }
+    std::u16string u16DocName = info[2].As<Napi::String>().Utf16Value();
+    std::wstring docname = u16stringToWString(u16DocName);
+
+    // Check and extract the fourth argument (string)
+    if (!info[3].IsString()) {
+        Napi::TypeError::New(env, "Argument 3 must be a string").ThrowAsJavaScriptException();
+        return env.Null();
+    }
+    std::u16string u16Type = info[3].As<Napi::String>().Utf16Value();
+    std::wstring type = u16stringToWString(u16Type);
+
+    // Convert std::wstring to LPWSTR (mutable wide string pointer)
     std::vector<wchar_t> printernameMutable(printername.begin(), printername.end());
     printernameMutable.push_back(L'\0'); // Ensure null-termination
 
-        PrinterHandle printerHandle(printernameMutable.data());
+    PrinterHandle printerHandle(printernameMutable.data());
+    if (!printerHandle) {
+        std::string error_str("Error on PrinterHandle: ");
+        error_str += getLastErrorCodeAndMessage();
+        Napi::TypeError::New(env, error_str).ThrowAsJavaScriptException();
+        return env.Null();
+    }
 
-    MY_NODE_MODULE_RETURN_VALUE(NAPI_STRING_NEW_2BYTES(MY_NODE_MODULE_ENV, "yet to be done"));
+    // Fill in the structure with info about this "document."
+    DOC_INFO_1W DocInfo;
+    DocInfo.pDocName = const_cast<LPWSTR>(docname.c_str());
+    DocInfo.pOutputFile = NULL;
+    DocInfo.pDatatype = const_cast<LPWSTR>(type.c_str());
+
+    // Inform the spooler the document is beginning.
+    DWORD dwJob = StartDocPrinterW(*printerHandle, 1, (LPBYTE)&DocInfo);
+    if (dwJob > 0) {
+        // Start a page.
+        BOOL bStatus = StartPagePrinter(*printerHandle);
+        if (bStatus) {
+            // Send the data to the printer.
+            DWORD dwBytesWritten = 0L;
+            bStatus = WritePrinter(*printerHandle, (LPVOID)(data.c_str()), (DWORD)data.size(), &dwBytesWritten);
+            EndPagePrinter(*printerHandle);
+
+            // Check to see if correct number of bytes were written.
+            if (dwBytesWritten != data.size()) {
+                Napi::TypeError::New(env, "Not all bytes were sent").ThrowAsJavaScriptException();
+                return env.Null();
+            }
+        } else {
+            std::string error_str("StartPagePrinter error: ");
+            error_str += getLastErrorCodeAndMessage();
+            Napi::TypeError::New(env, error_str).ThrowAsJavaScriptException();
+            return env.Null();
+        }
+        // Inform the spooler that the document is ending.
+        EndDocPrinter(*printerHandle);
+    } else {
+        std::string error_str("StartDocPrinterW error: ");
+        error_str += getLastErrorCodeAndMessage();
+        Napi::TypeError::New(env, error_str).ThrowAsJavaScriptException();
+        return env.Null();
+    }
+
+    MY_NODE_MODULE_RETURN_VALUE(Napi::Number::New(env, dwJob));
 }
