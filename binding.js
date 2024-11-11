@@ -30,6 +30,7 @@ module.exports.sayMyName = addon.SayMyName
 module.exports.getPrinters = addon.getPrinters
 module.exports.printDirect = printDirect
 module.exports.getDefaultPrinterName = addon.getDefaultPrinterName
+module.exports.getPrinter = getPrinter;
 
 
 /*
@@ -118,6 +119,22 @@ module.exports.getDefaultPrinterName = addon.getDefaultPrinterName
         error("Not supported");
     }
 }
+
+/** Get printer info with jobs
+ * @param printerName printer name to extract the info
+ * @return printer object info:
+ *		TODO: to enum all possible attributes
+ */
+ function getPrinter(printerName)
+ {
+     if(!printerName) {
+         printerName = addon.getDefaultPrinterName();
+     }
+     var printer = addon.getPrinter(printerName);
+     correctPrinterinfo(printer);
+     return printer;
+ }
+
 
 function correctPrinterinfo(printer) {
     if(printer.status || !printer.options || !printer.options['printer-state']){
