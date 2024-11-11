@@ -31,7 +31,8 @@ module.exports.getPrinters = addon.getPrinters
 module.exports.printDirect = printDirect
 module.exports.getDefaultPrinterName = addon.getDefaultPrinterName
 module.exports.getPrinter = getPrinter;
-
+/// send file to printer
+module.exports.printFile = printFile;
 
 /*
  print raw data. This function is intend to be asynchronous
@@ -162,4 +163,80 @@ function correctPrinterinfo(printer) {
     }
 
     printer.status = status;
+}
+
+/**
+parameters:
+   parameters - Object, parameters objects with the following structure:
+      filename - String, mandatory, data to printer
+      docname - String, optional, name of document showed in printer status
+      printer - String, optional, mane of the printer, if missed, will try to retrieve the default printer name
+      success - Function, optional, callback function
+      error - Function, optional, callback function if exists any error
+*/
+function printFile(parameters){
+    var filename,
+        docname,
+        printer,
+        options,
+        success,
+        error;
+
+    if((arguments.length !== 1) || (typeof(parameters) !== 'object')){
+        throw new Error('must provide arguments object');
+    }
+
+    filename = parameters.filename;
+    docname = parameters.docname;
+    printer = parameters.printer;
+    options = parameters.options || {};
+    success = parameters.success;
+    error = parameters.error;
+
+    if(!success){
+        success = function(){};
+    }
+
+    if(!error){
+        error = function(err){
+            throw err;
+        };
+    }
+
+    if(!filename){
+        var err = new Error('must provide at least a filename');
+        return error(err);
+    }
+
+    // try to define default printer name
+    if(!printer) {
+        printer = addon.getDefaultPrinterName();
+    }
+
+    if(!printer) {
+        return error(new Error('Printer parameter of default printer is not defined'));
+    }
+
+    // set filename if docname is missing
+    if(!docname){
+        docname = filename;
+    }
+
+    //TODO: check parameters type
+    if(addon.printFile){// call C++ binding
+        try{
+            // TODO: proper success/error callbacks from the extension
+            var res = addon.printFile(filename, docname, printer, options);
+
+            if(!isNaN(parseInt(res))) {
+                success(res);
+            } else {
+                error(Error(res));
+            }
+        } catch (e) {
+            error(e);
+        }
+    } else {
+        error("Not supported");
+    }
 }

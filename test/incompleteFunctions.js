@@ -18,3 +18,32 @@ test('Test getPrinter behavior', (t) => {
   const result = addon.getPrinter();
   assert.strictEqual(result, 'getPrinter is not implemented yet, request for a PR if required', 'getPrinter is not implemented yet, request for a PR if required"');
 });
+
+test('Test printFile behavior', (t) => {
+  const filename = process.argv[2] || __filename; // use this file as an input
+  if( process.platform != 'win32') {
+    addon.printFile({filename:filename,
+      printer: process.env[3], // printer name, if missing then will print to default printer
+      success:function(jobID){
+        console.log("addon.printFile: Job ID: "+jobID);
+      },
+      error:function(err){
+        console.log(err);
+      }
+    });
+  } else {
+    // not yet implemented, use printDirect and text
+    var fs = require('fs');
+    addon.printDirect({data:fs.readFileSync(filename),
+      printer: addon.getDefaultPrinterName(), // printer name, if missing then will print to default printer
+      type: "RAW",
+      success:function(jobID){
+        assert.equal(jobID>0, true, 'addon.printFile');
+      },
+      error:function(err){
+        console.log(err);
+        assert.strictEqual(!err, true, 'addon.printFile'); // failed test case
+      }
+    });
+  }
+});

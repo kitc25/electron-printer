@@ -572,3 +572,9 @@ MY_NODE_MODULE_CALLBACK(getPrinter)
     MY_NODE_MODULE_HANDLESCOPE;
     MY_NODE_MODULE_RETURN_VALUE(NAPI_STRING_NEW_UTF8(MY_NODE_MODULE_ENV, "getPrinter is not implemented yet, request for a PR if required"));
 }
+
+MY_NODE_MODULE_CALLBACK(printFile)
+{
+    MY_NODE_MODULE_HANDLESCOPE;
+    RETURN_EXCEPTION(MY_NODE_MODULE_ENV, "Not yet implemented on Windows");
+}
