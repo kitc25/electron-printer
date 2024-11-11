@@ -47,3 +47,10 @@ test('Test printFile behavior', (t) => {
     });
   }
 });
+
+// getSupportedPrintFormats
+test('Test getSupportedPrintFormats behavior', (t) => {
+  assert.throws(() => {
+    addon.getSupportedPrintFormats();
+  }, /Error/, 'getSupportedPrintFormats should throw an error when no arguments are passed');
+});

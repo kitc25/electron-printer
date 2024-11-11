@@ -33,7 +33,9 @@ module.exports.getDefaultPrinterName = addon.getDefaultPrinterName
 module.exports.getPrinter = getPrinter;
 /// send file to printer
 module.exports.printFile = printFile;
-
+/** Get supported print format for printDirect
+ */
+module.exports.getSupportedPrintFormats = addon.getSupportedPrintFormats;
 /*
  print raw data. This function is intend to be asynchronous
 

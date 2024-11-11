@@ -9,6 +9,7 @@ Napi::Object Init(Napi::Env env, Napi::Object exports) {
   MY_MODULE_SET_METHOD(exports, "printDirect", printDirect); 
   MY_MODULE_SET_METHOD(exports, "getPrinter", getPrinter);
   MY_MODULE_SET_METHOD(exports, "printFile", printFile);
+  MY_MODULE_SET_METHOD(exports, "getSupportedPrintFormats", getSupportedPrintFormats);
   return exports;
 }
 

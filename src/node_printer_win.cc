@@ -578,3 +578,9 @@ MY_NODE_MODULE_CALLBACK(printFile)
     MY_NODE_MODULE_HANDLESCOPE;
     RETURN_EXCEPTION(MY_NODE_MODULE_ENV, "Not yet implemented on Windows");
 }
+
+MY_NODE_MODULE_CALLBACK(getSupportedPrintFormats)
+{
+    MY_NODE_MODULE_HANDLESCOPE;
+    RETURN_EXCEPTION(MY_NODE_MODULE_ENV, "Not yet implemented, Request for a PR");
+}
