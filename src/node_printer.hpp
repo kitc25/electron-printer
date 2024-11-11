@@ -1,123 +1,73 @@
 #ifndef NODE_PRINTER_HPP
 #define NODE_PRINTER_HPP
-
 #include "macros.hh"
 
-#include <node.h>
-#include <v8.h>
 
-#include <string>
-
-/**
- * Send data to printer
- *
- * @param data String/NativeBuffer, mandatory, raw data bytes
- * @param printername String, mandatory, specifying printer name
- * @param docname String, mandatory, specifying document name
- * @param type String, mandatory, specifying data type. E.G.: RAW, TEXT, ...
- *
- * @returns true for success, false for failure.
- */
-MY_NODE_MODULE_CALLBACK(PrintDirect);
-
-/**
- * Send file to printer
- *
- * @param filename String, mandatory, specifying filename to print
- * @param docname String, mandatory, specifying document name
- * @param printer String, mandatory, specifying printer name
- *
- * @returns jobId for success, or error message for failure.
- */
-MY_NODE_MODULE_CALLBACK(PrintFile);
-
-/** Retrieve all printers and jobs
- * posix: minimum version: CUPS 1.1.21/OS X 10.4
- */
+MY_NODE_MODULE_CALLBACK(SayMyName);
 MY_NODE_MODULE_CALLBACK(getPrinters);
+MY_NODE_MODULE_CALLBACK(getDefaultPrinterName);
+MY_NODE_MODULE_CALLBACK(printDirect);
+
 
 /**
- * Return default printer name, if null then default printer is not set
+ * @brief A base class template for managing a pointer to a value of type Type.
+ * 
+ * This class provides basic functionality for managing a pointer to a value,
+ * including construction, destruction, and access methods.
+ * 
+ * @tparam Type The type of the value being managed.
  */
-MY_NODE_MODULE_CALLBACK(getDefaultPrinterName);
 
-/** Retrieve printer info and jobs
- * @param printer name String
- */
-MY_NODE_MODULE_CALLBACK(getPrinter);
-
-/** Retrieve printer driver info
- * @param printer name String
- */
-MY_NODE_MODULE_CALLBACK(getPrinterDriverOptions);
-
-/** Retrieve job info
- *  @param printer name String
- *  @param job id Number
- */
-MY_NODE_MODULE_CALLBACK(getJob);
-
-//TODO
-/** Set job command. 
- * arguments:
- * @param printer name String
- * @param job id Number
- * @param job command String
- * Possible commands:
- *      "CANCEL"
- *      "PAUSE"
- *      "RESTART"
- *      "RESUME"
- *      "DELETE"
- *      "SENT-TO-PRINTER"
- *      "LAST-PAGE-EJECTED"
- *      "RETAIN"
- *      "RELEASE"
- */
-MY_NODE_MODULE_CALLBACK(setJob);
-
-/** Get supported print formats for printDirect. It depends on platform
- */
-MY_NODE_MODULE_CALLBACK(getSupportedPrintFormats);
-
-/** Get supported job commands for setJob method
- */
-MY_NODE_MODULE_CALLBACK(getSupportedJobCommands);
-
-//TODO:
-// optional ability to get printer spool
-
-
-// util class
-
-/** Memory value class management to avoid memory leak
- * TODO: move to std::unique_ptr on switching to C++11
-*/
 template<typename Type>
 class MemValueBase
 {
 public:
+    /**
+     * @brief Default constructor. Initializes the pointer to NULL.
+     */
     MemValueBase(): _value(NULL) {}
 
-    /** Destructor. The allocated memory will be deallocated
-    */
+    /**
+     * @brief Virtual destructor. The allocated memory will be deallocated.
+     */
     virtual ~MemValueBase() {}
-
+    /**
+     * @brief Gets the pointer to the value.
+     * 
+     * @return A pointer to the value of type Type.
+     */
     Type * get() {return _value; }
+    /**
+     * @brief Overloaded arrow operator to access the value.
+     * 
+     * @return A pointer to the value of type Type.
+     */
     Type * operator ->() { return &_value; }
+    /**
+     * @brief Conversion operator to check if the pointer is not NULL.
+     * 
+     * @return True if the pointer is not NULL, false otherwise.
+     */
     operator bool() const { return (_value != NULL); }
 protected:
-    Type *_value;
-
+    Type *_value;  /**< Pointer to the value of type Type. */
+    /**
+     * @brief Virtual method to free the allocated memory.
+     * 
+     * This method can be overridden by derived classes to provide custom
+     * memory deallocation logic.
+     */
     virtual void free() {};
 };
 
 /**
- * try to extract String or buffer from v8 value
- * @param iV8Value - source v8 value
+ * Try to extract a string or buffer from a N-API value.
+ * @param value - source N-API value
  * @param oData - destination data
- * @return TRUE if value is String or Buffer, FALSE otherwise
+ * @return TRUE if value is a string or buffer, FALSE otherwise
  */
-bool getStringOrBufferFromV8Value(v8::Local<v8::Value> iV8Value, std::string &oData);
+
+bool getStringOrBufferFromNapiValue(const Napi::Value& value, std::string& oData);
+
 
 #endif
