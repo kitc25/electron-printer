@@ -118,3 +118,31 @@ module.exports.getDefaultPrinterName = addon.getDefaultPrinterName
         error("Not supported");
     }
 }
+
+function correctPrinterinfo(printer) {
+    if(printer.status || !printer.options || !printer.options['printer-state']){
+        return;
+    }
+
+    var status = printer.options['printer-state'];
+    // Add posix status
+    if(status == '3'){
+        status = 'IDLE'
+    }
+    else if(status == '4'){
+        status = 'PRINTING'
+    }
+    else if(status == '5'){
+        status = 'STOPPED'
+    }
+
+    // correct date type
+    var k;
+    for(k in printer.options) {
+        if(/time$/.test(k) && printer.options[k] && !(printer.options[k] instanceof Date)) {
+            printer.options[k] = new Date(printer.options[k] * 1000);
+        }
+    }
+
+    printer.status = status;
+}
