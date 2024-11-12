@@ -2,7 +2,7 @@
   "name": "@thesusheer/electron-printer",
   "description": "Node API (N-API) supported electron.s || node.js printer bindings",
   "homepage": "https://github.com/Susheer/electron-printer",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "main": "./lib/index.js",
   "types": "types/index.d.ts",
   "dependencies": {

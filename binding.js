@@ -30,8 +30,12 @@ module.exports.sayMyName = addon.SayMyName
 module.exports.getPrinters = addon.getPrinters
 module.exports.printDirect = printDirect
 module.exports.getDefaultPrinterName = addon.getDefaultPrinterName
-
-
+module.exports.getPrinter = getPrinter;
+/// send file to printer
+module.exports.printFile = printFile;
+/** Get supported print format for printDirect
+ */
+module.exports.getSupportedPrintFormats = addon.getSupportedPrintFormats;
 /*
  print raw data. This function is intend to be asynchronous
 
@@ -115,6 +119,126 @@ module.exports.getDefaultPrinterName = addon.getDefaultPrinterName
             error(e);
         }
     }else{
+        error("Not supported");
+    }
+}
+
+/** Get printer info with jobs
+ * @param printerName printer name to extract the info
+ * @return printer object info:
+ *		TODO: to enum all possible attributes
+ */
+ function getPrinter(printerName)
+ {
+     if(!printerName) {
+         printerName = addon.getDefaultPrinterName();
+     }
+     var printer = addon.getPrinter(printerName);
+     correctPrinterinfo(printer);
+     return printer;
+ }
+
+
+function correctPrinterinfo(printer) {
+    if(printer.status || !printer.options || !printer.options['printer-state']){
+        return;
+    }
+
+    var status = printer.options['printer-state'];
+    // Add posix status
+    if(status == '3'){
+        status = 'IDLE'
+    }
+    else if(status == '4'){
+        status = 'PRINTING'
+    }
+    else if(status == '5'){
+        status = 'STOPPED'
+    }
+
+    // correct date type
+    var k;
+    for(k in printer.options) {
+        if(/time$/.test(k) && printer.options[k] && !(printer.options[k] instanceof Date)) {
+            printer.options[k] = new Date(printer.options[k] * 1000);
+        }
+    }
+
+    printer.status = status;
+}
+
+/**
+parameters:
+   parameters - Object, parameters objects with the following structure:
+      filename - String, mandatory, data to printer
+      docname - String, optional, name of document showed in printer status
+      printer - String, optional, mane of the printer, if missed, will try to retrieve the default printer name
+      success - Function, optional, callback function
+      error - Function, optional, callback function if exists any error
+*/
+function printFile(parameters){
+    var filename,
+        docname,
+        printer,
+        options,
+        success,
+        error;
+
+    if((arguments.length !== 1) || (typeof(parameters) !== 'object')){
+        throw new Error('must provide arguments object');
+    }
+
+    filename = parameters.filename;
+    docname = parameters.docname;
+    printer = parameters.printer;
+    options = parameters.options || {};
+    success = parameters.success;
+    error = parameters.error;
+
+    if(!success){
+        success = function(){};
+    }
+
+    if(!error){
+        error = function(err){
+            throw err;
+        };
+    }
+
+    if(!filename){
+        var err = new Error('must provide at least a filename');
+        return error(err);
+    }
+
+    // try to define default printer name
+    if(!printer) {
+        printer = addon.getDefaultPrinterName();
+    }
+
+    if(!printer) {
+        return error(new Error('Printer parameter of default printer is not defined'));
+    }
+
+    // set filename if docname is missing
+    if(!docname){
+        docname = filename;
+    }
+
+    //TODO: check parameters type
+    if(addon.printFile){// call C++ binding
+        try{
+            // TODO: proper success/error callbacks from the extension
+            var res = addon.printFile(filename, docname, printer, options);
+
+            if(!isNaN(parseInt(res))) {
+                success(res);
+            } else {
+                error(Error(res));
+            }
+        } catch (e) {
+            error(e);
+        }
+    } else {
         error("Not supported");
     }
 }
