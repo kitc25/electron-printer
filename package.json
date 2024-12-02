@@ -36,7 +36,7 @@
     "host": "https://github.com/Susheer/electron-printer/releases/download/",
     "remote_path": "v{version}"
   },
-   "node-pre-gyp-github": {
+  "node-pre-gyp-github": {
     "target_commitish": "napi-compatibility"
   },
   "licenses": [
@@ -51,6 +51,6 @@
     "grunt-node-gyp": "^5.0.0",
     "grunt-shell": "^4.0.0",
     "node-pre-gyp": "^0.17.0",
-    "node-pre-gyp-github": "^1.4.5"
+    "node-pre-gyp-github": "github:Susheer/node-pre-gyp-github"
   }
 }
