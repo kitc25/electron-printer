@@ -12,7 +12,7 @@
     "install": "prebuild-install || node-gyp rebuild",
     "rebuild": "node-gyp rebuild",
     "prepublishOnly": "grunt release",
-    "electron-rebuild": "node-gyp rebuild --target_platform=win32 --target_arch=x64  --runtime=electron --target=32.2.0 --dist-url=https://electronjs.org/headers",
+    "electron-rebuild": "node-gyp rebuild --target_platform=linux --target_arch=x64  --runtime=electron --target=32.2.0 --dist-url=https://electronjs.org/headers",
     "test": "node --test test/"
   },
   "gypfile": false,
